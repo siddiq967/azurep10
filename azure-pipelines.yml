@@ -1,0 +1,23 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean test'
+    options: '-DskipTests=false'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
+    testRunTitle: 'Maven Unit Tests'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(System.DefaultWorkingDirectory)/target'
+    artifactName: 'drop'
+    publishLocation: 'Container'
